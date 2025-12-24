@@ -177,17 +177,8 @@ const REGIONS_MAP: { [region: string]: string[] } = {
         "東京都",
         "神奈川県",
     ],
-    中部: [
-        "新潟県",
-        "富山県",
-        "石川県",
-        "福井県",
-        "山梨県",
-        "長野県",
-        "岐阜県",
-        "静岡県",
-        "愛知県",
-    ], // Includes Hokuriku, Koshinetsu, Tokai
+    北陸: ["新潟県", "富山県", "石川県", "福井県"],
+    東海: ["山梨県", "長野県", "岐阜県", "静岡県", "愛知県"],
     近畿: [
         "三重県",
         "滋賀県",
@@ -252,13 +243,21 @@ const regionColorClasses: {
         countText: "text-blue-600",
         countBorder: "border-blue-100",
     },
-    中部: {
-        chipBg: "bg-green-100",
-        chipBorder: "border-green-200",
-        chipText: "text-green-900",
+    北陸: {
+        chipBg: "bg-emerald-100",
+        chipBorder: "border-emerald-200",
+        chipText: "text-emerald-900",
         countBg: "bg-white",
-        countText: "text-green-600",
-        countBorder: "border-green-100",
+        countText: "text-emerald-600",
+        countBorder: "border-emerald-100",
+    },
+    東海: {
+        chipBg: "bg-indigo-100",
+        chipBorder: "border-indigo-200",
+        chipText: "text-indigo-900",
+        countBg: "bg-white",
+        countText: "text-indigo-600",
+        countBorder: "border-indigo-100",
     },
     近畿: {
         chipBg: "bg-yellow-100",
