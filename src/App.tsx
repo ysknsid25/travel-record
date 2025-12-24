@@ -271,12 +271,16 @@ function PopupCard({ group }: { group: TravelRecord[] }) {
 }
 
 function ListView() {
-    const [sortMode, setSortMode] = useState<"rating" | "prefecture">("rating");
+    const [sortMode, setSortMode] = useState<
+        "rating" | "prefecture" | "archives"
+    >("rating");
 
     let content;
 
     if (sortMode === "rating") {
-        const sortedRecords = [...travelRecords].sort((a, b) => b.rating - a.rating);
+        const sortedRecords = [...travelRecords].sort(
+            (a, b) => b.rating - a.rating
+        );
         content = (
             <div className="flex flex-col gap-4">
                 {sortedRecords.map((record, idx) => (
@@ -284,16 +288,16 @@ function ListView() {
                 ))}
             </div>
         );
-    } else {
+    } else if (sortMode === "prefecture") {
         // Sort by prefecture order (North to South)
         const groupedByPref: { [key: string]: TravelRecord[] } = {};
-        
+
         // Initialize groups in correct order
-        PREFECTURE_ORDER.forEach(pref => {
+        PREFECTURE_ORDER.forEach((pref) => {
             groupedByPref[pref] = [];
         });
 
-        travelRecords.forEach(record => {
+        travelRecords.forEach((record) => {
             if (groupedByPref[record.prefecture]) {
                 groupedByPref[record.prefecture].push(record);
             }
@@ -303,18 +307,22 @@ function ListView() {
 
         content = (
             <div className="flex flex-col gap-8">
-                {PREFECTURE_ORDER.map(pref => {
+                {PREFECTURE_ORDER.map((pref) => {
                     const records = groupedByPref[pref];
                     if (records.length === 0) return null;
 
                     return (
                         <div key={pref}>
-                             <h2 className="text-lg font-bold text-gray-800 mb-3 border-b border-gray-200 pb-1 sticky top-0 bg-gray-50 z-10">
+                            <h2 className="text-lg font-bold text-gray-800 mb-3 border-b border-gray-200 pb-1 sticky top-0 bg-gray-50 z-10">
                                 {pref}
                             </h2>
                             <div className="flex flex-col gap-3">
                                 {records.map((record, idx) => (
-                                    <ListItem key={idx} record={record} index={globalIndex++} />
+                                    <ListItem
+                                        key={idx}
+                                        record={record}
+                                        index={globalIndex++}
+                                    />
                                 ))}
                             </div>
                         </div>
@@ -322,16 +330,147 @@ function ListView() {
                 })}
             </div>
         );
+    } else {
+        // Archives Mode
+        const prefCounts = travelRecords.reduce((acc, record) => {
+            acc[record.prefecture] = (acc[record.prefecture] || 0) + 1;
+            return acc;
+        }, {} as Record<string, number>);
+
+        const visitedPrefs = PREFECTURE_ORDER.filter(
+            (p) => (prefCounts[p] || 0) > 0
+        ).sort((a, b) => {
+            const countDiff = prefCounts[b] - prefCounts[a];
+            if (countDiff !== 0) return countDiff;
+            return PREFECTURE_ORDER.indexOf(a) - PREFECTURE_ORDER.indexOf(b);
+        });
+
+        const unvisitedPrefs = PREFECTURE_ORDER.filter(
+            (p) => (prefCounts[p] || 0) === 0
+        );
+
+        const isComplete = unvisitedPrefs.length === 0;
+
+        content = (
+            <div className="flex flex-col gap-8">
+                {isComplete && (
+                    <div className="bg-gradient-to-r from-yellow-100 via-yellow-50 to-yellow-100 border border-yellow-200 rounded-lg p-6 text-center shadow-sm relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-50">
+                            {/* Simple confetti-like decoration */}
+                            <div className="absolute top-2 left-4 text-2xl animate-bounce">
+                                🎉
+                            </div>
+                            <div
+                                className="absolute top-8 right-10 text-2xl animate-bounce"
+                                style={{ animationDelay: "0.2s" }}
+                            >
+                                🎊
+                            </div>
+                            <div
+                                className="absolute bottom-4 left-1/3 text-2xl animate-bounce"
+                                style={{ animationDelay: "0.5s" }}
+                            >
+                                🥂
+                            </div>
+                        </div>
+                        <h2 className="text-2xl font-extrabold text-yellow-800 mb-2 relative z-10">
+                            Congratulations!
+                        </h2>
+                        <p className="text-yellow-700 font-medium relative z-10">
+                            You have visited all 47 prefectures!
+                        </p>
+                    </div>
+                )}
+
+                <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                    <div className="flex justify-between items-end mb-2">
+                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider">
+                            Progress
+                        </h3>
+                        <span className="text-2xl font-bold text-blue-600">
+                            {visitedPrefs.length}
+                            <span className="text-sm text-gray-400 font-normal ml-1">
+                                / {PREFECTURE_ORDER.length}
+                            </span>
+                        </span>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-2.5">
+                        <div
+                            className="bg-blue-600 h-2.5 rounded-full transition-all duration-1000 ease-out"
+                            style={{
+                                width: `${
+                                    (visitedPrefs.length /
+                                        PREFECTURE_ORDER.length) *
+                                    100
+                                }%`,
+                            }}
+                        ></div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        Visited
+                        <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                            {visitedPrefs.length}
+                        </span>
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                        {visitedPrefs.map((pref, idx) => (
+                            <div
+                                key={pref}
+                                className="sliding-animation inline-flex items-center bg-blue-50 border border-blue-200 rounded-lg px-3 py-1.5 shadow-sm"
+                                style={
+                                    { "--stagger": idx } as React.CSSProperties
+                                }
+                            >
+                                <span className="font-bold text-blue-900 mr-2">
+                                    {pref}
+                                </span>
+                                <span className="bg-white text-blue-600 text-xs font-bold px-2 py-0.5 rounded-full border border-blue-100">
+                                    {prefCounts[pref]}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {unvisitedPrefs.length > 0 && (
+                    <div>
+                        <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+                            Unvisited
+                            <span className="bg-gray-100 text-gray-600 text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                                {unvisitedPrefs.length}
+                            </span>
+                        </h3>
+                        <div className="flex flex-wrap gap-2">
+                            {unvisitedPrefs.map((pref) => (
+                                <div
+                                    key={pref}
+                                    className="inline-flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 opacity-60"
+                                >
+                                    <span className="font-medium text-gray-500">
+                                        {pref}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
     }
 
     return (
         <div className="max-w-3xl mx-auto px-4 py-8 overflow-y-auto h-full pb-20">
-             <div className="mb-6 flex justify-end">
+            <div className="mb-6 flex justify-end">
                 <div className="bg-white p-1 rounded-lg border border-gray-200 inline-flex shadow-sm">
                     <button
                         onClick={() => setSortMode("rating")}
                         className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                            sortMode === "rating" ? "bg-blue-50 text-blue-700" : "text-gray-600 hover:text-gray-900"
+                            sortMode === "rating"
+                                ? "bg-blue-50 text-blue-700"
+                                : "text-gray-600 hover:text-gray-900"
                         }`}
                     >
                         Rating Sort
@@ -339,10 +478,22 @@ function ListView() {
                     <button
                         onClick={() => setSortMode("prefecture")}
                         className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                            sortMode === "prefecture" ? "bg-blue-50 text-blue-700" : "text-gray-600 hover:text-gray-900"
+                            sortMode === "prefecture"
+                                ? "bg-blue-50 text-blue-700"
+                                : "text-gray-600 hover:text-gray-900"
                         }`}
                     >
                         Prefecture Sort
+                    </button>
+                    <button
+                        onClick={() => setSortMode("archives")}
+                        className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                            sortMode === "archives"
+                                ? "bg-blue-50 text-blue-700"
+                                : "text-gray-600 hover:text-gray-900"
+                        }`}
+                    >
+                        Archives
                     </button>
                 </div>
             </div>
