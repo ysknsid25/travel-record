@@ -106,6 +106,53 @@ const IconGithub = ({ className }: { className?: string }) => (
     </svg>
 );
 
+const IconSortRating = ({ className }: { className?: string }) => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={className}
+    >
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+    </svg>
+);
+
+const IconSortPrefecture = ({ className }: { className?: string }) => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={className}
+    >
+        <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+        <line x1="8" y1="2" x2="8" y2="18"></line>
+        <line x1="16" y1="6" x2="16" y2="22"></line>
+    </svg>
+);
+
+const IconTrophy = ({ className }: { className?: string }) => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={className}
+    >
+        <path d="M8 21h8m-4-9v9m-6.7-6.27a4 4 0 1 1-1.88-1.88M18.6 5.73a4 4 0 1 1 1.88 1.88M12 2a8 8 0 0 1 8 8c0 3-1.8 5.6-4.5 7h-7C5.8 15.6 4 13 4 10a8 8 0 0 1 8-8z"></path>
+    </svg>
+);
+
 // --- Utils ---
 
 const groupedRecords: { [key: string]: TravelRecord[] } = {};
@@ -119,34 +166,140 @@ travelRecords.forEach((record) => {
 });
 
 const REGIONS_MAP: { [region: string]: string[] } = {
-    "北海道": ["北海道"],
-    "東北": ["青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県"],
-    "関東": ["茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都", "神奈川県"],
-    "中部": ["新潟県", "富山県", "石川県", "福井県", "山梨県", "長野県", "岐阜県", "静岡県", "愛知県"], // Includes Hokuriku, Koshinetsu, Tokai
-    "近畿": ["三重県", "滋賀県", "京都府", "大阪府", "兵庫県", "奈良県", "和歌山県"],
-    "中国": ["鳥取県", "島根県", "岡山県", "広島県", "山口県"],
-    "四国": ["徳島県", "香川県", "愛媛県", "高知県"],
-    "九州": ["福岡県", "佐賀県", "長崎県", "熊本県", "大分県", "宮崎県", "鹿児島県"],
-    "沖縄": ["沖縄県"],
+    北海道: ["北海道"],
+    東北: ["青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県"],
+    関東: [
+        "茨城県",
+        "栃木県",
+        "群馬県",
+        "埼玉県",
+        "千葉県",
+        "東京都",
+        "神奈川県",
+    ],
+    中部: [
+        "新潟県",
+        "富山県",
+        "石川県",
+        "福井県",
+        "山梨県",
+        "長野県",
+        "岐阜県",
+        "静岡県",
+        "愛知県",
+    ], // Includes Hokuriku, Koshinetsu, Tokai
+    近畿: [
+        "三重県",
+        "滋賀県",
+        "京都府",
+        "大阪府",
+        "兵庫県",
+        "奈良県",
+        "和歌山県",
+    ],
+    中国: ["鳥取県", "島根県", "岡山県", "広島県", "山口県"],
+    四国: ["徳島県", "香川県", "愛媛県", "高知県"],
+    九州: [
+        "福岡県",
+        "佐賀県",
+        "長崎県",
+        "熊本県",
+        "大分県",
+        "宮崎県",
+        "鹿児島県",
+    ],
+    沖縄: ["沖縄県"],
 };
 
 const prefectureToRegion: { [key: string]: string } = {};
 Object.entries(REGIONS_MAP).forEach(([region, prefectures]) => {
-    prefectures.forEach(pref => {
+    prefectures.forEach((pref) => {
         prefectureToRegion[pref] = region;
     });
 });
 
-const regionColorClasses: { [key: string]: { chipBg: string; chipBorder: string; chipText: string; countBg: string; countText: string; countBorder: string } } = {
-    "北海道": { chipBg: "bg-red-100", chipBorder: "border-red-200", chipText: "text-red-900", countBg: "bg-white", countText: "text-red-600", countBorder: "border-red-100" },
-    "東北": { chipBg: "bg-purple-100", chipBorder: "border-purple-200", chipText: "text-purple-900", countBg: "bg-white", countText: "text-purple-600", countBorder: "border-purple-100" },
-    "関東": { chipBg: "bg-blue-100", chipBorder: "border-blue-200", chipText: "text-blue-900", countBg: "bg-white", countText: "text-blue-600", countBorder: "border-blue-100" },
-    "中部": { chipBg: "bg-green-100", chipBorder: "border-green-200", chipText: "text-green-900", countBg: "bg-white", countText: "text-green-600", countBorder: "border-green-100" },
-    "近畿": { chipBg: "bg-yellow-100", chipBorder: "border-yellow-200", chipText: "text-yellow-900", countBg: "bg-white", countText: "text-yellow-600", countBorder: "border-yellow-100" },
-    "中国": { chipBg: "bg-pink-100", chipBorder: "border-pink-200", chipText: "text-pink-900", countBg: "bg-white", countText: "text-pink-600", countBorder: "border-pink-100" },
-    "四国": { chipBg: "bg-teal-100", chipBorder: "border-teal-200", chipText: "text-teal-900", countBg: "bg-white", countText: "text-teal-600", countBorder: "border-teal-100" },
-    "九州": { chipBg: "bg-orange-100", chipBorder: "border-orange-200", chipText: "text-orange-900", countBg: "bg-white", countText: "text-orange-600", countBorder: "border-orange-100" },
-    "沖縄": { chipBg: "bg-cyan-100", chipBorder: "border-cyan-200", chipText: "text-cyan-900", countBg: "bg-white", countText: "text-cyan-600", countBorder: "border-cyan-100" },
+const regionColorClasses: {
+    [key: string]: {
+        chipBg: string;
+        chipBorder: string;
+        chipText: string;
+        countBg: string;
+        countText: string;
+        countBorder: string;
+    };
+} = {
+    北海道: {
+        chipBg: "bg-red-100",
+        chipBorder: "border-red-200",
+        chipText: "text-red-900",
+        countBg: "bg-white",
+        countText: "text-red-600",
+        countBorder: "border-red-100",
+    },
+    東北: {
+        chipBg: "bg-purple-100",
+        chipBorder: "border-purple-200",
+        chipText: "text-purple-900",
+        countBg: "bg-white",
+        countText: "text-purple-600",
+        countBorder: "border-purple-100",
+    },
+    関東: {
+        chipBg: "bg-blue-100",
+        chipBorder: "border-blue-200",
+        chipText: "text-blue-900",
+        countBg: "bg-white",
+        countText: "text-blue-600",
+        countBorder: "border-blue-100",
+    },
+    中部: {
+        chipBg: "bg-green-100",
+        chipBorder: "border-green-200",
+        chipText: "text-green-900",
+        countBg: "bg-white",
+        countText: "text-green-600",
+        countBorder: "border-green-100",
+    },
+    近畿: {
+        chipBg: "bg-yellow-100",
+        chipBorder: "border-yellow-200",
+        chipText: "text-yellow-900",
+        countBg: "bg-white",
+        countText: "text-yellow-600",
+        countBorder: "border-yellow-100",
+    },
+    中国: {
+        chipBg: "bg-pink-100",
+        chipBorder: "border-pink-200",
+        chipText: "text-pink-900",
+        countBg: "bg-white",
+        countText: "text-pink-600",
+        countBorder: "border-pink-100",
+    },
+    四国: {
+        chipBg: "bg-teal-100",
+        chipBorder: "border-teal-200",
+        chipText: "text-teal-900",
+        countBg: "bg-white",
+        countText: "text-teal-600",
+        countBorder: "border-teal-100",
+    },
+    九州: {
+        chipBg: "bg-orange-100",
+        chipBorder: "border-orange-200",
+        chipText: "text-orange-900",
+        countBg: "bg-white",
+        countText: "text-orange-600",
+        countBorder: "border-orange-100",
+    },
+    沖縄: {
+        chipBg: "bg-cyan-100",
+        chipBorder: "border-cyan-200",
+        chipText: "text-cyan-900",
+        countBg: "bg-white",
+        countText: "text-cyan-600",
+        countBorder: "border-cyan-100",
+    },
 };
 
 function App() {
@@ -315,7 +468,13 @@ function ListView() {
         content = (
             <div className="flex flex-col gap-4">
                 {sortedRecords.map((record, idx) => (
-                    <ListItem key={idx} record={record} index={idx} prefectureToRegion={prefectureToRegion} regionColorClasses={regionColorClasses} />
+                    <ListItem
+                        key={idx}
+                        record={record}
+                        index={idx}
+                        prefectureToRegion={prefectureToRegion}
+                        regionColorClasses={regionColorClasses}
+                    />
                 ))}
             </div>
         );
@@ -448,29 +607,43 @@ function ListView() {
                             {visitedPrefs.length}
                         </span>
                     </h3>
-                                        <div className="flex flex-wrap gap-2">
-                                            {visitedPrefs.map((pref, idx) => {
-                                                const region = prefectureToRegion[pref] || "その他";
-                                                const colors = regionColorClasses[region] || { chipBg: "bg-gray-100", chipBorder: "border-gray-200", chipText: "text-gray-900", countBg: "bg-white", countText: "text-gray-600", countBorder: "border-gray-100" };
-                    
-                                                return (
-                                                    <div
-                                                        key={pref}
-                                                        className={`sliding-animation inline-flex items-center ${colors.chipBg} ${colors.chipBorder} rounded-lg px-3 py-1.5 shadow-sm`}
-                                                        style={
-                                                            { "--stagger": idx } as React.CSSProperties
-                                                        }
-                                                    >
-                                                        <span className={`font-bold ${colors.chipText} mr-2`}>
-                                                            {pref}
-                                                        </span>
-                                                        <span className={`${colors.countBg} ${colors.countText} text-xs font-bold px-2 py-0.5 rounded-full ${colors.countBorder}`}>
-                                                            {prefCounts[pref]}
-                                                        </span>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>                </div>
+                    <div className="flex flex-wrap gap-2">
+                        {visitedPrefs.map((pref, idx) => {
+                            const region = prefectureToRegion[pref] || "その他";
+                            const colors = regionColorClasses[region] || {
+                                chipBg: "bg-gray-100",
+                                chipBorder: "border-gray-200",
+                                chipText: "text-gray-900",
+                                countBg: "bg-white",
+                                countText: "text-gray-600",
+                                countBorder: "border-gray-100",
+                            };
+
+                            return (
+                                <div
+                                    key={pref}
+                                    className={`sliding-animation inline-flex items-center ${colors.chipBg} ${colors.chipBorder} rounded-lg px-3 py-1.5 shadow-sm`}
+                                    style={
+                                        {
+                                            "--stagger": idx,
+                                        } as React.CSSProperties
+                                    }
+                                >
+                                    <span
+                                        className={`font-bold ${colors.chipText} mr-2`}
+                                    >
+                                        {pref}
+                                    </span>
+                                    <span
+                                        className={`${colors.countBg} ${colors.countText} text-xs font-bold px-2 py-0.5 rounded-full ${colors.countBorder}`}
+                                    >
+                                        {prefCounts[pref]}
+                                    </span>
+                                </div>
+                            );
+                        })}
+                    </div>{" "}
+                </div>
 
                 {unvisitedPrefs.length > 0 && (
                     <div>
@@ -482,14 +655,24 @@ function ListView() {
                         </h3>
                         <div className="flex flex-wrap gap-2">
                             {unvisitedPrefs.map((pref) => {
-                                const region = prefectureToRegion[pref] || "その他";
-                                const colors = regionColorClasses[region] || { chipBg: "bg-gray-100", chipBorder: "border-gray-200", chipText: "text-gray-500", countBg: "bg-transparent", countText: "text-gray-500", countBorder: "border-transparent" };
+                                const region =
+                                    prefectureToRegion[pref] || "その他";
+                                const colors = regionColorClasses[region] || {
+                                    chipBg: "bg-gray-100",
+                                    chipBorder: "border-gray-200",
+                                    chipText: "text-gray-500",
+                                    countBg: "bg-transparent",
+                                    countText: "text-gray-500",
+                                    countBorder: "border-transparent",
+                                };
                                 return (
                                     <div
                                         key={pref}
                                         className={`inline-flex items-center ${colors.chipBg} ${colors.chipBorder} rounded-lg px-3 py-1.5 opacity-60`}
                                     >
-                                        <span className={`font-medium ${colors.chipText}`}>
+                                        <span
+                                            className={`font-medium ${colors.chipText}`}
+                                        >
                                             {pref}
                                         </span>
                                     </div>
@@ -508,33 +691,41 @@ function ListView() {
                 <div className="bg-white p-1 rounded-lg border border-gray-200 inline-flex shadow-sm">
                     <button
                         onClick={() => setSortMode("rating")}
-                        className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                             sortMode === "rating"
                                 ? "bg-blue-50 text-blue-700"
                                 : "text-gray-600 hover:text-gray-900"
                         }`}
+                        title="Rating Sort"
                     >
-                        Rating Sort
+                        <IconSortRating className="w-4 h-4" />
+                        <span className="hidden sm:inline">Rating Sort</span>
                     </button>
                     <button
                         onClick={() => setSortMode("prefecture")}
-                        className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                             sortMode === "prefecture"
                                 ? "bg-blue-50 text-blue-700"
                                 : "text-gray-600 hover:text-gray-900"
                         }`}
+                        title="Prefecture Sort"
                     >
-                        Prefecture Sort
+                        <IconSortPrefecture className="w-4 h-4" />
+                        <span className="hidden sm:inline">
+                            Prefecture Sort
+                        </span>
                     </button>
                     <button
                         onClick={() => setSortMode("archives")}
-                        className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                             sortMode === "archives"
                                 ? "bg-blue-50 text-blue-700"
                                 : "text-gray-600 hover:text-gray-900"
                         }`}
+                        title="Archives"
                     >
-                        Archives
+                        <IconTrophy className="w-4 h-4" />
+                        <span className="hidden sm:inline">Archives</span>
                     </button>
                 </div>
             </div>
@@ -576,7 +767,7 @@ function ListItem({
     };
 
     return (
-        <div 
+        <div
             className="sliding-animation bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
             style={{ "--stagger": index } as React.CSSProperties}
         >
