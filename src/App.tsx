@@ -121,7 +121,7 @@ const IconSortRating = ({ className }: { className?: string }) => (
     </svg>
 );
 
-const IconSortPrefecture = ({ className }: { className?: string }) => (
+const IconGlobe = ({ className }: { className?: string }) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -132,9 +132,9 @@ const IconSortPrefecture = ({ className }: { className?: string }) => (
         strokeLinejoin="round"
         className={className}
     >
-        <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
-        <line x1="8" y1="2" x2="8" y2="18"></line>
-        <line x1="16" y1="6" x2="16" y2="22"></line>
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="2" y1="12" x2="22" y2="12"></line>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
     </svg>
 );
 
@@ -456,7 +456,7 @@ function PopupCard({ group }: { group: TravelRecord[] }) {
 
 function ListView() {
     const [sortMode, setSortMode] = useState<
-        "rating" | "prefecture" | "archives"
+        "rating" | "prefecture" | "progress"
     >("rating");
 
     let content;
@@ -523,7 +523,7 @@ function ListView() {
             </div>
         );
     } else {
-        // Archives Mode
+        // Progress Mode
         const prefCounts = travelRecords.reduce((acc, record) => {
             acc[record.prefecture] = (acc[record.prefecture] || 0) + 1;
             return acc;
@@ -710,22 +710,22 @@ function ListView() {
                         }`}
                         title="Prefecture Sort"
                     >
-                        <IconSortPrefecture className="w-4 h-4" />
+                        <IconGlobe className="w-4 h-4" />
                         <span className="hidden sm:inline">
                             Prefecture Sort
                         </span>
                     </button>
                     <button
-                        onClick={() => setSortMode("archives")}
+                        onClick={() => setSortMode("progress")}
                         className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                            sortMode === "archives"
+                            sortMode === "progress"
                                 ? "bg-blue-50 text-blue-700"
                                 : "text-gray-600 hover:text-gray-900"
                         }`}
-                        title="Archives"
+                        title="Progress"
                     >
                         <IconTrophy className="w-4 h-4" />
-                        <span className="hidden sm:inline">Archives</span>
+                        <span className="hidden sm:inline">Progress</span>
                     </button>
                 </div>
             </div>
