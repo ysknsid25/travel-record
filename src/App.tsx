@@ -456,7 +456,7 @@ function PopupCard({ group }: { group: TravelRecord[] }) {
 function ListView() {
     const [sortMode, setSortMode] = useState<
         "rating" | "prefecture" | "progress"
-    >("rating");
+    >("progress");
 
     let content;
 
@@ -689,6 +689,18 @@ function ListView() {
             <div className="mb-6 flex justify-end">
                 <div className="bg-white p-1 rounded-lg border border-gray-200 inline-flex shadow-sm">
                     <button
+                        onClick={() => setSortMode("progress")}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                            sortMode === "progress"
+                                ? "bg-blue-50 text-blue-700"
+                                : "text-gray-600 hover:text-gray-900"
+                        }`}
+                        title="Progress"
+                    >
+                        <IconTrophy className="w-4 h-4" />
+                        <span className="hidden sm:inline">Progress</span>
+                    </button>
+                    <button
                         onClick={() => setSortMode("rating")}
                         className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                             sortMode === "rating"
@@ -713,18 +725,6 @@ function ListView() {
                         <span className="hidden sm:inline">
                             Prefecture Sort
                         </span>
-                    </button>
-                    <button
-                        onClick={() => setSortMode("progress")}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                            sortMode === "progress"
-                                ? "bg-blue-50 text-blue-700"
-                                : "text-gray-600 hover:text-gray-900"
-                        }`}
-                        title="Progress"
-                    >
-                        <IconTrophy className="w-4 h-4" />
-                        <span className="hidden sm:inline">Progress</span>
                     </button>
                 </div>
             </div>
