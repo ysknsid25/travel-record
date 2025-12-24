@@ -118,6 +118,37 @@ travelRecords.forEach((record) => {
     groupedRecords[key].push(record);
 });
 
+const REGIONS_MAP: { [region: string]: string[] } = {
+    "北海道": ["北海道"],
+    "東北": ["青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県"],
+    "関東": ["茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都", "神奈川県"],
+    "中部": ["新潟県", "富山県", "石川県", "福井県", "山梨県", "長野県", "岐阜県", "静岡県", "愛知県"], // Includes Hokuriku, Koshinetsu, Tokai
+    "近畿": ["三重県", "滋賀県", "京都府", "大阪府", "兵庫県", "奈良県", "和歌山県"],
+    "中国": ["鳥取県", "島根県", "岡山県", "広島県", "山口県"],
+    "四国": ["徳島県", "香川県", "愛媛県", "高知県"],
+    "九州": ["福岡県", "佐賀県", "長崎県", "熊本県", "大分県", "宮崎県", "鹿児島県"],
+    "沖縄": ["沖縄県"],
+};
+
+const prefectureToRegion: { [key: string]: string } = {};
+Object.entries(REGIONS_MAP).forEach(([region, prefectures]) => {
+    prefectures.forEach(pref => {
+        prefectureToRegion[pref] = region;
+    });
+});
+
+const regionColorClasses: { [key: string]: { chipBg: string; chipBorder: string; chipText: string; countBg: string; countText: string; countBorder: string } } = {
+    "北海道": { chipBg: "bg-red-100", chipBorder: "border-red-200", chipText: "text-red-900", countBg: "bg-white", countText: "text-red-600", countBorder: "border-red-100" },
+    "東北": { chipBg: "bg-purple-100", chipBorder: "border-purple-200", chipText: "text-purple-900", countBg: "bg-white", countText: "text-purple-600", countBorder: "border-purple-100" },
+    "関東": { chipBg: "bg-blue-100", chipBorder: "border-blue-200", chipText: "text-blue-900", countBg: "bg-white", countText: "text-blue-600", countBorder: "border-blue-100" },
+    "中部": { chipBg: "bg-green-100", chipBorder: "border-green-200", chipText: "text-green-900", countBg: "bg-white", countText: "text-green-600", countBorder: "border-green-100" },
+    "近畿": { chipBg: "bg-yellow-100", chipBorder: "border-yellow-200", chipText: "text-yellow-900", countBg: "bg-white", countText: "text-yellow-600", countBorder: "border-yellow-100" },
+    "中国": { chipBg: "bg-pink-100", chipBorder: "border-pink-200", chipText: "text-pink-900", countBg: "bg-white", countText: "text-pink-600", countBorder: "border-pink-100" },
+    "四国": { chipBg: "bg-teal-100", chipBorder: "border-teal-200", chipText: "text-teal-900", countBg: "bg-white", countText: "text-teal-600", countBorder: "border-teal-100" },
+    "九州": { chipBg: "bg-orange-100", chipBorder: "border-orange-200", chipText: "text-orange-900", countBg: "bg-white", countText: "text-orange-600", countBorder: "border-orange-100" },
+    "沖縄": { chipBg: "bg-cyan-100", chipBorder: "border-cyan-200", chipText: "text-cyan-900", countBg: "bg-white", countText: "text-cyan-600", countBorder: "border-cyan-100" },
+};
+
 function App() {
     const [mode, setMode] = useState<"map" | "list">("map");
 
@@ -284,7 +315,7 @@ function ListView() {
         content = (
             <div className="flex flex-col gap-4">
                 {sortedRecords.map((record, idx) => (
-                    <ListItem key={idx} record={record} index={idx} />
+                    <ListItem key={idx} record={record} index={idx} prefectureToRegion={prefectureToRegion} regionColorClasses={regionColorClasses} />
                 ))}
             </div>
         );
@@ -322,6 +353,8 @@ function ListView() {
                                         key={idx}
                                         record={record}
                                         index={globalIndex++}
+                                        prefectureToRegion={prefectureToRegion}
+                                        regionColorClasses={regionColorClasses}
                                     />
                                 ))}
                             </div>
@@ -415,25 +448,29 @@ function ListView() {
                             {visitedPrefs.length}
                         </span>
                     </h3>
-                    <div className="flex flex-wrap gap-2">
-                        {visitedPrefs.map((pref, idx) => (
-                            <div
-                                key={pref}
-                                className="sliding-animation inline-flex items-center bg-blue-50 border border-blue-200 rounded-lg px-3 py-1.5 shadow-sm"
-                                style={
-                                    { "--stagger": idx } as React.CSSProperties
-                                }
-                            >
-                                <span className="font-bold text-blue-900 mr-2">
-                                    {pref}
-                                </span>
-                                <span className="bg-white text-blue-600 text-xs font-bold px-2 py-0.5 rounded-full border border-blue-100">
-                                    {prefCounts[pref]}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {visitedPrefs.map((pref, idx) => {
+                                                const region = prefectureToRegion[pref] || "その他";
+                                                const colors = regionColorClasses[region] || { chipBg: "bg-gray-100", chipBorder: "border-gray-200", chipText: "text-gray-900", countBg: "bg-white", countText: "text-gray-600", countBorder: "border-gray-100" };
+                    
+                                                return (
+                                                    <div
+                                                        key={pref}
+                                                        className={`sliding-animation inline-flex items-center ${colors.chipBg} ${colors.chipBorder} rounded-lg px-3 py-1.5 shadow-sm`}
+                                                        style={
+                                                            { "--stagger": idx } as React.CSSProperties
+                                                        }
+                                                    >
+                                                        <span className={`font-bold ${colors.chipText} mr-2`}>
+                                                            {pref}
+                                                        </span>
+                                                        <span className={`${colors.countBg} ${colors.countText} text-xs font-bold px-2 py-0.5 rounded-full ${colors.countBorder}`}>
+                                                            {prefCounts[pref]}
+                                                        </span>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>                </div>
 
                 {unvisitedPrefs.length > 0 && (
                     <div>
@@ -444,16 +481,20 @@ function ListView() {
                             </span>
                         </h3>
                         <div className="flex flex-wrap gap-2">
-                            {unvisitedPrefs.map((pref) => (
-                                <div
-                                    key={pref}
-                                    className="inline-flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 opacity-60"
-                                >
-                                    <span className="font-medium text-gray-500">
-                                        {pref}
-                                    </span>
-                                </div>
-                            ))}
+                            {unvisitedPrefs.map((pref) => {
+                                const region = prefectureToRegion[pref] || "その他";
+                                const colors = regionColorClasses[region] || { chipBg: "bg-gray-100", chipBorder: "border-gray-200", chipText: "text-gray-500", countBg: "bg-transparent", countText: "text-gray-500", countBorder: "border-transparent" };
+                                return (
+                                    <div
+                                        key={pref}
+                                        className={`inline-flex items-center ${colors.chipBg} ${colors.chipBorder} rounded-lg px-3 py-1.5 opacity-60`}
+                                    >
+                                        <span className={`font-medium ${colors.chipText}`}>
+                                            {pref}
+                                        </span>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 )}
@@ -502,7 +543,38 @@ function ListView() {
     );
 }
 
-function ListItem({ record, index }: { record: TravelRecord; index: number }) {
+function ListItem({
+    record,
+    index,
+    prefectureToRegion,
+    regionColorClasses,
+}: {
+    record: TravelRecord;
+    index: number;
+    prefectureToRegion?: { [key: string]: string };
+    regionColorClasses?: {
+        [key: string]: {
+            chipBg: string;
+            chipBorder: string;
+            chipText: string;
+            countBg: string;
+            countText: string;
+            countBorder: string;
+        };
+    };
+}) {
+    const region = record.prefecture
+        ? prefectureToRegion?.[record.prefecture] || "その他"
+        : "その他";
+    const colors = regionColorClasses?.[region] || {
+        chipBg: "bg-gray-100",
+        chipBorder: "border-gray-200",
+        chipText: "text-gray-600",
+        countBg: "bg-white",
+        countText: "text-gray-600",
+        countBorder: "border-gray-100",
+    };
+
     return (
         <div 
             className="sliding-animation bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
@@ -514,7 +586,9 @@ function ListItem({ record, index }: { record: TravelRecord; index: number }) {
                         <span className="text-xs font-semibold px-2 py-0.5 rounded bg-gray-100 text-gray-600 border border-gray-200">
                             {record.year}
                         </span>
-                        <span className="text-xs font-semibold px-2 py-0.5 rounded bg-blue-50 text-blue-600 border border-blue-100">
+                        <span
+                            className={`text-xs font-semibold px-2 py-0.5 rounded ${colors.chipBg} ${colors.chipText} ${colors.chipBorder}`}
+                        >
                             {record.prefecture}
                         </span>
                     </div>
