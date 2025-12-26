@@ -82,3 +82,58 @@ npm run build
 ```
 
 `dist` ディレクトリに公開用のファイルが生成されます。
+
+## 🖥️ Screen Specification
+
+### 1. Map View (Default)
+The initial view of the application, displaying travel records as markers on a map of Japan.
+
+![Map View Initial](docs/images/map_view_initial.png)
+
+#### Features
+- Interactive map powered by Leaflet.
+- Markers indicating locations of travel records.
+- Zoom and pan functionality.
+- Header with links to GitHub ([Travel Record Repo](https://github.com/ysknsid25/travel-record)) and toggle between Map and List views.
+
+### 2. Map View - Popup Details
+Clicking on a marker opens a popup displaying the details of the travel record.
+
+![Map View Popup](docs/images/map_view_popup.png)
+
+#### Details Displayed
+- Prefecture and Year.
+- Location/Spot Name.
+- Star Rating (1-5 stars).
+- Memo/Description.
+- Navigation arrows (if multiple records exist at the same location).
+
+### 3. List View - Progress Tab (Default)
+Displays the user's progress in visiting all 47 prefectures.
+
+![List View Progress](docs/images/list_view_progress.png)
+
+#### Features
+- Progress bar showing visited count / 47.
+- List of "Visited" prefectures with visit counts, color-coded by region.
+- List of "Unvisited" prefectures.
+
+### 4. List View - Rating Sort
+Displays travel records sorted by their star rating (descending).
+
+![List View Rating](docs/images/list_view_rating.png)
+
+#### Features
+- List of individual travel records.
+- Sorted by highest rating first.
+- Displays Year, Prefecture, Name, Rating, and Memo.
+
+### 5. List View - Prefecture Sort
+Displays travel records grouped by prefecture, ordered from North to South.
+
+![List View Prefecture](docs/images/list_view_prefecture.png)
+
+#### Features
+- Headers for each prefecture.
+- Records listed under their respective prefecture.
+- Standard record details displayed for each item.
